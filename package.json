@@ -1,0 +1,16 @@
+{
+  "name": "metro-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.jsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "metro": "^0.42.2",
+    "mkdirp": "^0.5.1"
+  }
+}
