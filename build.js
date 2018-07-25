@@ -5,16 +5,25 @@ const MetroApi = require('metro');
 const config = MetroApi.loadMetroConfig();
 mkdirp.sync('./dist');
 
-/** works */
-MetroApi.runBuild({
+const commonOptions = {
   config,
+  maxWorkers: 1,
+  verbose: true,
+  resetCache: true,
   out: path.resolve('dist/index.bundle.js'),
-  entry: path.resolve('./src/index.js'),
-})
+}
 
-/** does not work */
+MetroApi.runBuild({
+  ...commonOptions,
+  entry: path.resolve('./src/index.js'),
+});
+
 // MetroApi.runBuild({
-//   config,
-//   out: path.resolve('dist/index.bundle.js'),
+//   ...commonOptions,
 //   entry: path.resolve('./src/index.jsx'),
 // });
+
+
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+});
