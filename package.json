@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "metro": "^0.42.2",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "webpack": "^4.16.3"
   }
 }
