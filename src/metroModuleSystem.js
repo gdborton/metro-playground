@@ -46,7 +46,7 @@ function define(factory, moduleId, dependencyMap) {
   }
   modules[moduleId] = {
     dependencyMap,
-    exports: undefined,
+    publicModule: {},
     factory,
     hasError: false,
     isInitialized: false,
@@ -112,7 +112,7 @@ function metroRequire(moduleId) {
   }
   const module = modules[moduleIdReallyIsNumber];
   return module && module.isInitialized
-    ? module.exports
+    ? module.publicModule.exports
     : guardedLoadModule(moduleIdReallyIsNumber, module);
 }
 
@@ -182,7 +182,7 @@ function loadModuleImplementation(moduleId, module) {
   // factory to keep any require cycles inside the factory from causing an
   // infinite require loop.
   module.isInitialized = true;
-  const exports = (module.exports = {});
+  const exports = {};
   const {factory, dependencyMap} = module;
   if (__DEV__) {
     initializingModuleIds.push(moduleId);
@@ -196,7 +196,7 @@ function loadModuleImplementation(moduleId, module) {
       Systrace.beginEvent('JS_require_' + (module.verboseName || moduleId));
     }
 
-    const moduleObject = {exports};
+    const moduleObject = module.publicModule = {exports};
     if (__DEV__ && module.hot) {
       moduleObject.hot = module.hot;
     }
@@ -217,12 +217,12 @@ function loadModuleImplementation(moduleId, module) {
       // $FlowFixMe: we know that __DEV__ is const and `Systrace` exists
       Systrace.endEvent();
     }
-    return (module.exports = moduleObject.exports);
+    return moduleObject.exports;
   } catch (e) {
     module.hasError = true;
     module.error = e;
     module.isInitialized = false;
-    module.exports = undefined;
+    module.publicModule.exports = undefined;
     throw e;
   } finally {
     if (__DEV__) {
